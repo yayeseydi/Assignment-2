@@ -1,0 +1,21 @@
+#!/bin/bash
+# This script creates a list of packages in packages_list.txt
+
+# Function to list packages
+list_packages() {
+    # Define the list of packages
+    packages=("kakoune" "tmux")
+
+    # Write each package to packages_list.txt
+    echo "Creating lpackages.txt with the following packages:"
+    > lpackges.txt  # Clear the file if it exists
+    for package in "${packages[@]}"; do
+        echo "$package" >> lpackages.txt
+        echo "- $package"
+    done
+
+    echo "Package list saved to lpackages.txt"
+}
+
+# Call the function to list packages
+list_packages
