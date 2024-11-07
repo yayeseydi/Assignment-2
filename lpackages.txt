@@ -1,2 +1,4 @@
 kakoune
 tmux
+kakoune
+tmux
