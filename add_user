@@ -1,1 +1,18 @@
 #!/bin/bash
+
+# Verify that it's running as root
+# Root user has ID 0, so we check if it's not root
+if [ $EUID -ne 0 ]; then  
+  # If not root, show a warning
+  echo "Run this as root" >&2
+# Exit the script since it's not running as root
+exit 1  
+fi
+
+# Show the usage information if something's wrong
+usage() {
+ # Tell the user how to use the script
+  echo "Usage: $0 -u username -s shell -h home_directory [-g additional_groups]" 
+ # Exit the script after showing usage
+exit 1  
+}
