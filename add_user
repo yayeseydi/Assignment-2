@@ -3,8 +3,13 @@
 # Verify that it's running as root
 # Root user has ID 0, so we check if it's not root
 if [ $EUID -ne 0 ]; then  
-  # If not root, show a warning
-  echo "Run this as root" >&2
+# $EUID is a  variable that holds the  user ID of the current user.
+# If it's not 0, it's not root. So, we check if we're root (EUID == 0).
+
+# If not root, show error message
+  echo "Error message: Run this as root" >&2
+# >&2 redirects the error message to the standard error instead of the standard output stream
+
 # Exit the script since it's not running as root
 exit 1  
 fi
@@ -16,3 +21,115 @@ usage() {
  # Exit the script after showing usage
 exit 1  
 }
+
+# Function to show user instructions on how to use the script
+show_usage() {
+    echo "Usage: $0 -u username -s shell -g additional_groups"
+    echo "  -u   username"
+    echo "  -s   shell"
+    echo "  -g  additional groups"
+}
+
+# getting the options for username, shell, home directory, and groups
+ # getopts processes command-line options. Here we check for options like -u, -s, -h, and -g.
+while getopts ":u:s:h:g:" opt; do
+  case ${opt} in
+    u)  
+      # When the option -u is found, store the following argument (username) in the variable 'username'.
+      username=${OPTARG}
+      ;;
+    s)  
+      # When the option -s is found, store the following argument (shell) in the variable 'shell'.
+      shell=${OPTARG}
+      ;;
+    h)  
+      # When the option -h is found, store the following argument (home directory) in the variable 'home_directory'.
+      home_directory=${OPTARG}
+      ;;
+    g)  
+      # When the option -g is found, store the following argument (groups) in the variable 'groups'.
+      groups=${OPTARG}
+      ;;
+    \?)  
+      # If an invalid option is passed, Prints an error message
+      echo "Invalid option: -$OPTARG" >&2
+      # Calls the usage function to show the values expected
+      usage
+      ;;
+    :)  
+      # If an option is passed without an argument, inform the user that the option requires an argument.
+      echo "Option -$OPTARG requires an argument." >&2
+       # Calls the usage function to show the values expected
+      usage
+      ;;
+  esac
+done
+
+# Ensure there is a valid username
+if [ -z "$username" ]; then
+  # If no username is provided, show the usage.
+  # Calls the usage function to show the values expected
+usage
+fi
+
+# Create the user with the given username and shell
+# The 'useradd' command creates a new user.
+# -m option creates the user's home directory.
+# -s option sets the login shell for the user (specified by $shell).
+# $username is the name of the user being created.
+
+useradd -m -s "$shell" "$username"
+
+# Check if the useradd command worked
+# $? stores the exit status of the last command.
+  # If it's non-zero, it means there was an error in creating the user.
+
+if [ $? -ne 0 ]; then
+
+ # If useradd didn't succeed, print an error message and exit.
+
+# $? stores the exit status of the last command.
+  # If it's non-zero, it means there was an error in creating the user.
+  
+# If useradd didn't succeed, print an error message and exit.
+  echo "Failed to create user $username" >&2
+  exit 1
+
+fi
+
+# If home directory was specified, copy default files into it
+#T he command copies these files to the new user's home directory.
+
+cp -r /etc/skel/. "$home_directory"
+# The 'cp' command copies files.
+# -r option means to copy recursively (to include all files in /etc/skel).
+# /etc/skel contains default configuration files (like .bashrc, .profile) for new users.
+
+# If extra groups were specified, add the user to those groups
+if [ ! -z "$groups" ]; then I
+
+# If the 'groups' variable isn't empty:
+
+usermod -aG "$groups" "$username"
+
+# The 'usermod' command modifies a user's account.
+# -aG appends the user to the pecified groups (without removing them from existing groups).
+# $groups is a list of additional groups.
+# $username is the name of the user being modified.
+
+fi
+
+# Change the ownership of the home directory so the new user can access it
+chown -R "$username":"$username" "$home_directory"
+# The 'chown' command changes the ownership of files and directories.
+# -R means it applies to all files and subdirectories inside the home directory.
+# $username:$username sets the ownership to the new user and their group.
+
+# Set the password for the new user
+echo "Set the password for the new user:"
+passwd "$username"
+# The 'passwd' command is used to set or change the password for the user.
+# In this case, it sets the password for the newly created user.
+
+# Print success message
+echo "User $username created successfully with home directory $home_directory and shell $shell."
