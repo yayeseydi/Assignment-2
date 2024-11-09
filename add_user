@@ -31,10 +31,12 @@ show_usage() {
 }
 
 # getting the options for username, shell, home directory, and groups
- # getopts processes command-line options. Here we check for options like -u, -s, -h, and -g.
+# getopts processes command-line options. Here we check for options like -u, -s, -h, and -g.
+ 
 while getopts ":u:s:h:g:" opt; do
   case ${opt} in
-    u)  
+    
+  u)  
       # When the option -u is found, store the following argument (username) in the variable 'username'.
       username=${OPTARG}
       ;;
@@ -73,12 +75,13 @@ usage
 fi
 
 # Create the user with the given username and shell
+
+useradd -m -s "$shell" "$username"
+
 # The 'useradd' command creates a new user.
 # -m option creates the user's home directory.
 # -s option sets the login shell for the user (specified by $shell).
 # $username is the name of the user being created.
-
-useradd -m -s "$shell" "$username"
 
 # Check if the useradd command worked
 # $? stores the exit status of the last command.
