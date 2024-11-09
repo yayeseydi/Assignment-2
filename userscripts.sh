@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Check if the script is run as root
+check_root () { 
+		if [[ $EUID -ne 0 ]]; then
+   # If the current user is not root , print an error message
+			ECHO "Error message: This script must run as root" 
+			exit 1
+
+		fi
+}
+
 # Call list packages
 echo "calling list packages:"
  ./list-packages
