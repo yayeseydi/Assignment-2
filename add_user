@@ -1,10 +1,14 @@
 #!/bin/bash
 
 # Verify that it's running as root
-# Root user has ID 0, so we check if it's not root
-if [ $EUID -ne 0 ]; then  
-# $EUID is a  variable that holds the  user ID of the current user.
-# If it's not 0, it's not root. So, we check if we're root (EUID == 0).
+check_root () { 
+		if [[ $EUID -ne 0 ]]; then
+   # If the current user is not root , print an error message
+			ECHO "Error message: This script must run as root" 
+			exit 1
+
+		fi
+}
 
 # If not root, show error message
   echo "Error message: Run this as root" >&2
