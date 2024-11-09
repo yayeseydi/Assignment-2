@@ -2,7 +2,7 @@
 
 ## Project 1:
 
-## Script 1: list-packages.sh
+## Script 1: list-packages
 
 This script generatese a list of packages (kakoune and tmux) and saves them to a file called lpackages.txt.
 
@@ -62,7 +62,7 @@ ln -s ~/2420-as2-starting-files/config/tmux/tmux.conf ~/.config/tmux/tmux.conf
 ```
 This script creates symbolic links for bashrc, kakrc, and tmux.conf configuration files. By linking them, changes to these configurations are automatically reflected in the respective directories, which allows for consistency.
 
-## Script 4: run-scripts.sh
+## Script 4: userscripts.sh
 
 This script calls the previous three scripts (list-packages.sh, install-packages.sh, and symlinks.sh) in order, to package listing, installing, and configuration linking.
 
@@ -81,7 +81,7 @@ This script runs the three main scripts in order, ensuring that packages are lis
 
 ## Project 2:
 
-## Script: create-user.sh
+## Script: add_user
 
 This script creates a new user based on the input provided by the user (username, shell, home directory, and optional groups).
 
