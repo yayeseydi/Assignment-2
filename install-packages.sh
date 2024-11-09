@@ -15,7 +15,7 @@ check_package_list() {
 # Check if the file 'list_packages.txt' exists in the current directory
     if [[ ! -f list_packages.txt ]]; then
  # If the file doesn't exist, print an error message    
-     echo "Error message: list_packages.txt not found!" 
+     echo "Error message: list_packages.txt does not exist" 
 # Exit the script with status code 1	    
      		exit 1
 
@@ -33,11 +33,18 @@ while read -r package; do
      # Print the package being installed
 	    echo "Installing $package"
      # If pacman fails to install the package, print a failure message
-	    pacman -S --noconfirm "$package" || echo "Error Message: Failed to install $package"
-fi
+	    pacman -S --noconfirm "$package" 
+        if [[ $? -ne 0 ]]; then
+            echo "Error message: Failed to install $package."
+	
+        else
+# Print installed successfully if installation is succesful
+            echo "$package installed successfully."
+        fi
+
+
 done < list_package.txt
 }
-# Call functions in order 
 
 # Check root permissions
 check_root
@@ -46,39 +53,5 @@ check_package
 # Install_packages
 install_packages
 
-# Define package list file
-PACKAGE_FILE="lpackages.txt"
-
-# Check that package list file exists
-if [[ ! -f $PACKAGE_FILE ]]; then
-
-# If the file doesn't exist, display error message and exit script
-	echo "Error: $PACKAGE_FILE does not exist. Please create it first."
-    exit 1
-fi
-
-# Display message to show the start of the package installation 
-echo "Installing packages listed in $PACKAGE_FILE..."
-
-# Read and  try to install package list
-while read -r package; do
-    if [[ -n $package ]]; then
-
-# Print installing package
-	echo "Installing $package..."
-# Install package using pacman
-	
-	sudo pacman -S --noconfirm "$package"
-        if [[ $? -ne 0 ]]; then
-            echo "Error: Failed to install $package."
-        else
-# Print installed successfully if installation is succesful
-            echo "$package installed successfully."
-        fi
-    fi
-
-# Redirect package list
-done < "$PACKAGE_FILE"
-
-#Print all packages processed
-echo "All packages processed."
+#Print all packages installed
+echo "All packages installed."
