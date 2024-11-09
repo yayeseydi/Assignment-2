@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# Check if the script is run as root
 check_root () { 
 		if [[ $EUID -ne 0 ]]; then
-			ECHO "This script must run as root" 
+   # If the current user is not root , print an error message
+			ECHO "Error message: This script must run as root" 
 			exit 1
 
 		fi
@@ -10,9 +12,12 @@ check_root () {
 
 # Verify that the packages_list.txt exists
 check_package_list() {
+# Check if the file 'list_packages.txt' exists in the current directory
     if [[ ! -f list_packages.txt ]]; then
-	    echo "Error: list_packages.txt not found!" 
-	    exit 1
+ # If the file doesn't exist, print an error message    
+     echo "Error message: list_packages.txt not found!" 
+# Exit the script with status code 1	    
+     		exit 1
 
 	fi
 }
@@ -21,10 +26,14 @@ check_package_list() {
 install.packages() {
 
 # Read and install packages
+# Loop through each line of the file 'list_packages.txt'
 while read -r package; do
+# Check if the package variable is not empty
     if [[-n "$package" ]]; then
+     # Print the package being installed
 	    echo "Installing $package"
-	    pacman -S --noconfirm "$package" || echo "Failed to instal $package"
+     # If pacman fails to install the package, print a failure message
+	    pacman -S --noconfirm "$package" || echo "Error Message: Failed to install $package"
 fi
 done < list_package.txt
 }
