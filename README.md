@@ -1,6 +1,15 @@
-# Assignment 2
- 
- 2420 as 2 start configuration files
+# Assignment 2- Shell Scripting
+
+## Table of Contents
+Project One:
+  Overview
+   Scripts
+     List Packages 
+     Install Packages 
+     Create Symbolic Links 
+     Call All Scripts.   
+Executing & Running the Scripts
+
 
 See assignment instructions on D2L
 =======
